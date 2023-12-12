@@ -2,10 +2,10 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
-#include <set>
+#include <string>
 using namespace std;
 
-bool isInRange(vector<string> &engine, int y, int x) {
+bool isInRange(const vector<string> &engine, const int y, const int x) {
     if (y < 0 || y >= engine.size() || x < 0 || x >= engine[y].size()) {
         return false;
     }
@@ -13,70 +13,89 @@ bool isInRange(vector<string> &engine, int y, int x) {
     return true;
 }
 
-vector<pair<int, int>> isSurronded(vector<string> &engine, int y, int x) {
-    vector<pair<int, int>> right_dirs = {{-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
-    // vector<pair<int, int>> middle_dirs = {{0, -1}, {0, 1}};
-    vector<pair<int, int>> left_dirs = {{-1, -1}, {0, -1}, {1, -1}};
-    vector<pair<int, int>> positions;
+string getForward(const vector<string> &lines, const int y, const int x) {
+    int i = 0;
+    string num = "";
+    num += lines[y][x];
+    while (isInRange(lines, y, x + 1 + i) && isdigit(lines[y][x + 1 + i])) {
+        num = num + lines[y][x + 1 + i];
+        ++i;
+    }
+    return num;
+}
 
-    if (isInRange(engine, y - 1, x) && isdigit(engine[y - 1][x])) {
-        if (isInRange(engine, y - 1, x + 1) && isdigit(engine[y - 1][x + 1])) {
-            int i = 1;
-            while (isInRange(engine, y - 1, x + 1 + i) && isdigit(engine[y - 1][x + 1 + i])) {
-                ++i;
-            }
-            positions.push_back({y - 1, x + 1 + i});
+string getBackward(const vector<string> &lines, const int y, const int x) {
+    int i = 0;
+    string num = "";
+    num += lines[y][x];
+    while (isInRange(lines, y, x - 1 - i) && isdigit(lines[y][x - 1 - i])) {
+        num = num + lines[y][x - 1 - i];
+        ++i;
+    }
+    reverse(num.begin(), num.end());
+    return num;
+}
+
+string getMiddle(const vector<string> &lines, const int y, const int x) {
+    string prev = getBackward(lines, y, x);
+    string next = getForward(lines, y, x).substr(1);
+    return prev + next;
+}
+
+vector<int> getSurrounded(const vector<string> &lines, const int y, const int x) {
+    vector<int> nums;
+
+    // Top row
+    if (isInRange(lines, y - 1, x) && isdigit(lines[y - 1][x])) {
+        if (isInRange(lines, y - 1, x + 1) && isdigit(lines[y - 1][x + 1])) {
+            int num = stoi(getMiddle(lines, y - 1, x));
+            nums.push_back(num);
         } else {
-            positions.push_back({y - 1, x});
+            int num = stoi(getBackward(lines, y - 1, x));
+            nums.push_back(num);
         }
     } else {
-        if (isInRange(engine, y - 1, x + 1) && isdigit(engine[y - 1][x + 1])) {
-            int i = 1;
-            while (isInRange(engine, y - 1, x + 1 + i) && isdigit(engine[y - 1][x + 1 + i])) {
-                ++i;
-            }
-            positions.push_back({y - 1, x + 1 + i});
+        if (isInRange(lines, y - 1, x + 1) && isdigit(lines[y - 1][x + 1])) {
+            int num = stoi(getForward(lines, y - 1, x + 1));
+            nums.push_back(num);
         }
-        if (isInRange(engine, y - 1, x - 1) && isdigit(engine[y - 1][x - 1])) {
-            positions.push_back({y - 1, x - 1});
+        if (isInRange(lines, y - 1, x - 1) && isdigit(lines[y - 1][x - 1])) {
+            int num = stoi(getBackward(lines, y - 1, x - 1));
+            nums.push_back(num);
         }
     }
 
-    if (isInRange(engine, y, x + 1) && isdigit(engine[y][x + 1])) {
-        int i = 1;
-        while (isInRange(engine, y, x + 1 + i) && isdigit(engine[y][x + 1 + i])) {
-            ++i;
-        }
-        positions.push_back({y, x + 1 + i});
+    // Middle Row
+    if (isInRange(lines, y, x - 1) && isdigit(lines[y][x - 1])) {
+        int num = stoi(getBackward(lines, y, x - 1));
+        nums.push_back(num);
     }
-    if (isInRange(engine, y, x - 1) && isdigit(engine[y][x - 1])) {
-        positions.push_back({y, x - 1});
+    if (isInRange(lines, y, x + 1) && isdigit(lines[y][x + 1])) {
+        int num = stoi(getForward(lines, y, x + 1));
+        nums.push_back(num);
     }
 
-    if (isInRange(engine, y + 1, x) && isdigit(engine[y + 1][x])) {
-        if (isInRange(engine, y + 1, x + 1) && isdigit(engine[y + 1][x + 1])) {
-            int i = 1;
-            while (isInRange(engine, y + 1, x + 1 + i) && isdigit(engine[y + 1][x + 1 + i])) {
-                ++i;
-            }
-            positions.push_back({y + 1, x + 1 + i});
+    // Bottom Row
+    if (isInRange(lines, y + 1, x) && isdigit(lines[y + 1][x])) {
+        if (isInRange(lines, y + 1, x + 1) && isdigit(lines[y + 1][x + 1])) {
+            int num = stoi(getMiddle(lines, y + 1, x));
+            nums.push_back(num);
         } else {
-            positions.push_back({y + 1, x});
+            int num = stoi(getBackward(lines, y + 1, x));
+            nums.push_back(num);
         }
     } else {
-        if (isInRange(engine, y + 1, x + 1) && isdigit(engine[y + 1][x + 1])) {
-            int i = 1;
-            while (isInRange(engine, y + 1, x + 1 + i) && isdigit(engine[y + 1][x + 1 + i])) {
-                ++i;
-            }
-            positions.push_back({y + 1, x + 1 + i});
+        if (isInRange(lines, y + 1, x + 1) && isdigit(lines[y + 1][x + 1])) {
+            int num = stoi(getForward(lines, y + 1, x + 1));
+            nums.push_back(num);
         }
-        if (isInRange(engine, y + 1, x - 1) && isdigit(engine[y + 1][x - 1])) {
-            positions.push_back({y + 1, x - 1});
+        if (isInRange(lines, y + 1, x - 1) && isdigit(lines[y + 1][x - 1])) {
+            int num = stoi(getBackward(lines, y + 1, x - 1));
+            nums.push_back(num);
         }
     }
 
-    return positions;
+    return nums;
 }
 
 int main() {
@@ -90,43 +109,24 @@ int main() {
     int ans = 0;
     for (int y = 0; y < lines.size(); ++y) {
         for (int x = 0; x < lines[y].length(); ++x) {
-            // cout << lines[y][x] << ' ';
-
-            // if (isdigit(lines[y][x]) && isSurronding(lines, y, x)) {
-            //     cout << lines[y][x];
-            // }
             if (lines[y][x] == '*') {
-                vector<pair<int, int>> positions = isSurronded(lines, y, x);
-                // iterate thourh positions, and calculate num
-
-                if (positions.size() != 2) {
-                    break;
+                vector<int> nums = getSurrounded(lines, y, x);
+                if (nums.size() != 2) {
+                    continue;
                 }
 
                 int gear_ratio = 1;
-                for (const auto &pos : positions) {
-                    int y_pos = pos.first;
-                    int upperbound = pos.second;
-                    cout << y_pos << ' ' << upperbound << '\n';
-
-                    int final_num = -1;
-                    for (int i = 0; i <= upperbound; ++i) {
-                        if (isdigit(lines[y_pos][i])) {
-                            int num = int(lines[y_pos][i] - '0');
-                            while (i < upperbound && isdigit(lines[y_pos][i + 1])) {
-                                ++i;
-                                num = num * 10 + int(lines[y_pos][i] - '0');
-                            }
-                            final_num = num;
-                            // ans += num;
-                        }
-                    }
-                    cout << final_num << "\n\n";
-                    gear_ratio *= final_num;
+                for (const int num : nums) {
+                    cout << num << ' ';
+                    gear_ratio *= num;
                 }
+                cout << '\n';
+
                 ans += gear_ratio;
             }
         }
     }
     cout << '\n' << ans;
+
+    return 0;
 }
