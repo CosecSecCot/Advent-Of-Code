@@ -1,2 +1,3 @@
-*.out
-./input
+.DS_Store
+input
+*/*.out
