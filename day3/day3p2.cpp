@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-struct Hand {};
 using namespace std;
 
 bool isInRange(const vector<string> &engine, const int y, const int x) {
