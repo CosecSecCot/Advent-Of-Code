@@ -1,35 +1,42 @@
-# Advent of Code Solutions
+# Advent of Code 2024
 
-Welcome to my **Advent of Code** repository! Here you'll find my solutions
-to the programming challenges presented each year during the [Advent of Code](https://adventofcode.com/).
-Each year's solutions are organized into separate branches.
+This branch contains my solutions to the **[Advent of Code 2024](https://adventofcode.com/2024)**.
 
-## Repository Structure
+## About This Repository
 
-The master branch of this repository is intentionally left empty. All the code
-and solutions for a specific year's Advent of Code are stored in branches named
-after the year. For example:
+This repository is organized to keep solutions for each year's
+**Advent of Code** in separate branches. You're currently viewing the
+`2024` branch, which contains solutions exclusively for the 2024 edition.
+For solutions to other years, check out the corresponding branches.
 
-- **2024** branch: Solutions for Advent of Code 2024
-- **2023** branch: Solutions for Advent of Code 2023
-- *(and so on...)*
+## How to View the Solutions
 
-## How to Use This Repository
-
-1. **Clone the repository**:
+1. Clone the repository and checkout the `2024` branch:
 
    ```bash
-   git clone https://github.com/CosecSecCot/Advent-Of-Code.git
-   cd advent-of-code
+   git clone -b 2024 https://github.com/CosecSecCot/Advent-Of-Code.git
+   cd Advent-Of-Code
    ```
 
-2. **Checkout a specific year's branch**:
+2. Each day’s solution is organized in its own file, typically named `dayXX`
+(e.g., `day01`, `day02`, etc.).
 
-   ```bash
-   git checkout <year>
-   ```
+## Requirements
 
-   Replace `<year>` with the desired year, for example: `2023`.
+The solutions are written in `Rust`.
+
+Install the latest stable version of [Rust](https://www.rust-lang.org/tools/install):
+
+## How To Run
+
+- Use the following command to run python files:
+
+  ```bash
+  cargo run --bin day<xx>
+  ```
+
+  Replace `<xx>` with the day number.
+  (e.g., `day01`, `day02`, etc.).
 
 ## About Advent of Code
 

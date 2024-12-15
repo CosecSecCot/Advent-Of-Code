@@ -1,0 +1,15 @@
+[package]
+name = "Advent-Of-Code"
+edition = "2021"
+publish = false
+
+[lib]
+name = "aoc"
+path = "src/lib.rs"
+
+[[bin]]
+name = "day01"
+path = "src/day01.rs"
+
+[dependencies]
+anyhow = "1.0"
