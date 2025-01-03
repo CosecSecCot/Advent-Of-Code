@@ -30,7 +30,7 @@ fn main() -> Result<()> {
     let mut left: Vec<i32> = Vec::new();
     let mut right: Vec<i32> = Vec::new();
 
-    aoc::read_line::<i32>("./data/1.example")?
+    aoc::read_lines::<i32>("./data/1.example")?
         .iter()
         .for_each(|line| {
             left.push(line[0]);

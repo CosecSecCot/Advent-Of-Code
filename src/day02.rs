@@ -56,7 +56,7 @@ fn part2(levels: &mut Vec<Vec<i32>>) -> Result<i32> {
 }
 
 fn main() -> Result<()> {
-    let mut levels = aoc::read_line::<i32>("./data/2.input")?;
+    let mut levels = aoc::read_lines::<i32>("./data/2.input")?;
 
     println!("Part 1: {}", part1(&levels)?);
     println!("Part 2: {}", part2(&mut levels)?);
